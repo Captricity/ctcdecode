@@ -6,15 +6,19 @@ from setuptools import setup, find_packages
 from pybind11.setup_helpers import Pybind11Extension, build_ext, ParallelCompile, naive_recompile
 from setuptools.command.build_ext import build_ext
 
-__version__ = '0.4.4'
+__version__ = '0.4.5'
 
-# first, download and extract openfst
+# We now are will keep a downloaded version of openfst to use
 
 
 def download_extract(url, dl_path):
     from urllib.request import urlretrieve
 
-    if not os.path.isfile(dl_path):
+    # Check to see if the file is in the third_party directory already
+    local_file = os.path.join('third_party', os.path.basename(dl_path))
+    if os.path.isfile(local_file):
+        dl_path = local_file
+    elif not os.path.isfile(dl_path):
         # Already downloaded
         urlretrieve(url, dl_path)
     if dl_path.endswith(".tar.gz") and os.path.isdir(dl_path[:-len(".tar.gz")]):
